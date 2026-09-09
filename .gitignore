@@ -1,0 +1,14 @@
+# Built binaries (anchored to repo root so cmd/<name>/ source dirs are kept)
+/kpf
+/k8s-orphaned-pvc-finder
+/dist/
+*.exe
+
+# Go
+*.test
+*.out
+coverage.txt
+
+# Keep test fixtures tracked no matter what
+!testdata/**
+!examples/**

@@ -1,0 +1,43 @@
+{
+  "pvcs": [
+    {
+      "metadata": { "name": "data-web-0", "namespace": "shop", "creationTimestamp": "2026-01-01T00:00:00Z" },
+      "spec": { "storageClassName": "gp3" },
+      "status": { "phase": "Bound", "capacity": { "storage": "10Gi" } }
+    },
+    {
+      "metadata": { "name": "data-cache-0", "namespace": "shop", "creationTimestamp": "2026-02-01T00:00:00Z" },
+      "spec": { "storageClassName": "gp3" },
+      "status": { "phase": "Bound", "capacity": { "storage": "5Gi" } }
+    },
+    {
+      "metadata": { "name": "leftover-batch", "namespace": "data", "creationTimestamp": "2025-11-15T00:00:00Z" },
+      "spec": { "storageClassName": "io2" },
+      "status": { "phase": "Bound", "capacity": { "storage": "100Gi" } }
+    },
+    {
+      "metadata": { "name": "no-class-vol", "namespace": "data", "creationTimestamp": "2025-12-01T00:00:00Z" },
+      "spec": {},
+      "status": { "phase": "Bound", "capacity": { "storage": "1Gi" } }
+    }
+  ],
+  "pods": [
+    {
+      "metadata": { "name": "web-0", "namespace": "shop" },
+      "spec": {
+        "volumes": [
+          { "name": "data", "persistentVolumeClaim": { "claimName": "data-web-0" } },
+          { "name": "config", "configMap": { "name": "web-config" } }
+        ]
+      }
+    },
+    {
+      "metadata": { "name": "worker-0", "namespace": "data" },
+      "spec": {
+        "volumes": [
+          { "name": "tmp", "emptyDir": {} }
+        ]
+      }
+    }
+  ]
+}

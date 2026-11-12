@@ -1,0 +1,39 @@
+# PVCs referenced by Pods in different phases, plus a scaled-down StatefulSet.
+pvcs:
+  - metadata: { name: nightly-report, namespace: jobs, creationTimestamp: "2026-01-01T00:00:00Z" }
+    spec: { storageClassName: gp3, accessModes: [ReadWriteOnce] }
+    status: { phase: Bound, accessModes: [ReadWriteOnce], capacity: { storage: 20Gi } }
+  - metadata: { name: queue-buffer, namespace: jobs, creationTimestamp: "2026-01-01T00:00:00Z" }
+    spec: { storageClassName: gp3, accessModes: [ReadWriteOnce] }
+    status: { phase: Bound, accessModes: [ReadWriteOnce], capacity: { storage: 2Gi } }
+  - metadata: { name: data-db-0, namespace: db, creationTimestamp: "2026-01-01T00:00:00Z" }
+    spec: { storageClassName: io2, accessModes: [ReadWriteOnce] }
+    status: { phase: Bound, accessModes: [ReadWriteOnce], capacity: { storage: 50Gi } }
+  - metadata: { name: data-db-2, namespace: db, creationTimestamp: "2026-01-01T00:00:00Z" }
+    spec: { storageClassName: io2, accessModes: [ReadWriteOnce] }
+    status: { phase: Bound, accessModes: [ReadWriteOnce], capacity: { storage: 50Gi } }
+  - metadata: { name: data-db-old, namespace: db, creationTimestamp: "2026-01-01T00:00:00Z" }
+    spec: { storageClassName: io2, accessModes: [ReadWriteOnce] }
+    status: { phase: Bound, accessModes: [ReadWriteOnce], capacity: { storage: 10Gi } }
+  - metadata: { name: shared-files, namespace: db, creationTimestamp: "2026-03-01T00:00:00Z" }
+    spec: { storageClassName: efs, accessModes: [ReadWriteMany] }
+    status: { phase: Pending }
+pods:
+  - metadata: { name: nightly-report-29000000-aaaaa, namespace: jobs, creationTimestamp: "2026-03-01T00:00:00Z" }
+    spec: { volumes: [ { name: out, persistentVolumeClaim: { claimName: nightly-report } } ] }
+    status: { phase: Succeeded }
+  - metadata: { name: nightly-report-29001440-bbbbb, namespace: jobs, creationTimestamp: "2026-03-02T00:00:00Z" }
+    spec: { volumes: [ { name: out, persistentVolumeClaim: { claimName: nightly-report } } ] }
+    status: { phase: Failed }
+  - metadata: { name: consumer-0, namespace: jobs, creationTimestamp: "2026-03-02T00:00:00Z" }
+    spec: { volumes: [ { name: buf, persistentVolumeClaim: { claimName: queue-buffer } } ] }
+    status: { phase: Pending }
+  - metadata: { name: db-0, namespace: db, creationTimestamp: "2026-03-02T00:00:00Z" }
+    spec: { volumes: [ { name: data, persistentVolumeClaim: { claimName: data-db-0 } } ] }
+    status: { phase: Running }
+statefulsets:
+  # Scaled down from 3 to 1: data-db-2 has no Pod but the StatefulSet still owns it.
+  - metadata: { name: db, namespace: db }
+    spec:
+      volumeClaimTemplates:
+        - metadata: { name: data }

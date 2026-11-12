@@ -1,43 +1,18 @@
 {
   "pvcs": [
-    {
-      "metadata": { "name": "data-web-0", "namespace": "shop", "creationTimestamp": "2026-01-01T00:00:00Z" },
-      "spec": { "storageClassName": "gp3" },
-      "status": { "phase": "Bound", "capacity": { "storage": "10Gi" } }
-    },
-    {
-      "metadata": { "name": "data-cache-0", "namespace": "shop", "creationTimestamp": "2026-02-01T00:00:00Z" },
-      "spec": { "storageClassName": "gp3" },
-      "status": { "phase": "Bound", "capacity": { "storage": "5Gi" } }
-    },
-    {
-      "metadata": { "name": "leftover-batch", "namespace": "data", "creationTimestamp": "2025-11-15T00:00:00Z" },
-      "spec": { "storageClassName": "io2" },
-      "status": { "phase": "Bound", "capacity": { "storage": "100Gi" } }
-    },
-    {
-      "metadata": { "name": "no-class-vol", "namespace": "data", "creationTimestamp": "2025-12-01T00:00:00Z" },
-      "spec": {},
-      "status": { "phase": "Bound", "capacity": { "storage": "1Gi" } }
-    }
+    {"metadata": {"name": "data-web-0", "namespace": "shop", "creationTimestamp": "2026-01-01T00:00:00Z"}, "spec": {"storageClassName": "gp3", "accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "capacity": {"storage": "10Gi"}, "accessModes": ["ReadWriteOnce"]}},
+    {"metadata": {"name": "data-cache-0", "namespace": "shop", "creationTimestamp": "2026-02-01T00:00:00Z"}, "spec": {"storageClassName": "gp3", "accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "capacity": {"storage": "5Gi"}, "accessModes": ["ReadWriteOnce"]}},
+    {"metadata": {"name": "leftover-batch", "namespace": "data", "creationTimestamp": "2025-11-15T00:00:00Z"}, "spec": {"storageClassName": "io2", "accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "capacity": {"storage": "100Gi"}, "accessModes": ["ReadWriteOnce"]}},
+    {"metadata": {"name": "no-class-vol", "namespace": "data", "creationTimestamp": "2025-12-01T00:00:00Z"}, "spec": {"accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "capacity": {"storage": "1Gi"}, "accessModes": ["ReadWriteOnce"]}},
+    {"metadata": {"name": "data-search-1", "namespace": "shop", "creationTimestamp": "2026-02-15T00:00:00Z"}, "spec": {"storageClassName": "gp3", "accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "accessModes": ["ReadWriteOnce"], "capacity": {"storage": "20Gi"}}},
+    {"metadata": {"name": "nightly-export", "namespace": "data", "creationTimestamp": "2026-03-01T00:00:00Z"}, "spec": {"storageClassName": "gp3", "accessModes": ["ReadWriteOnce"]}, "status": {"phase": "Bound", "accessModes": ["ReadWriteOnce"], "capacity": {"storage": "50Gi"}}}
   ],
   "pods": [
-    {
-      "metadata": { "name": "web-0", "namespace": "shop" },
-      "spec": {
-        "volumes": [
-          { "name": "data", "persistentVolumeClaim": { "claimName": "data-web-0" } },
-          { "name": "config", "configMap": { "name": "web-config" } }
-        ]
-      }
-    },
-    {
-      "metadata": { "name": "worker-0", "namespace": "data" },
-      "spec": {
-        "volumes": [
-          { "name": "tmp", "emptyDir": {} }
-        ]
-      }
-    }
+    {"metadata": {"name": "web-0", "namespace": "shop"}, "spec": {"volumes": [{"name": "data", "persistentVolumeClaim": {"claimName": "data-web-0"}}, {"name": "config", "configMap": {"name": "web-config"}}]}, "status": {"phase": "Running"}},
+    {"metadata": {"name": "worker-0", "namespace": "data"}, "spec": {"volumes": [{"name": "tmp", "emptyDir": {}}]}, "status": {"phase": "Running"}},
+    {"metadata": {"name": "nightly-export-29170080-x7k2p", "namespace": "data", "creationTimestamp": "2026-11-10T02:00:00Z"}, "spec": {"volumes": [{"name": "out", "persistentVolumeClaim": {"claimName": "nightly-export"}}]}, "status": {"phase": "Succeeded"}}
+  ],
+  "statefulsets": [
+    {"metadata": {"name": "search", "namespace": "shop"}, "spec": {"replicas": 1, "volumeClaimTemplates": [{"metadata": {"name": "data"}}]}}
   ]
 }

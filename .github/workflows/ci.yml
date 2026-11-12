@@ -36,6 +36,8 @@ jobs:
           go build -o kpf ./cmd/k8s-orphaned-pvc-finder
           ./kpf scan --input examples/cluster-dump.json
           ./kpf scan --input examples/cluster-dump.json --output json
+          ./kpf scan --input examples/cluster-dump.json --output csv
+          ./kpf scan --input examples/cluster-dump.json --price-file examples/prices.yaml --min-age 30d
           set +e
           ./kpf scan --input examples/cluster-dump.json --fail-on orphans >/dev/null
           code=$?

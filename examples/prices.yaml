@@ -1,0 +1,7 @@
+# Example price table for --price-file: currency per GiB-month.
+# These numbers are placeholders; use your provider's price list for your region.
+currency: USD
+classes:
+  gp3: 0.08
+  io2: 0.125
+  "<none>": 0.10
